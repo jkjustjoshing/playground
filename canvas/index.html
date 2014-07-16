@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ES6 Test</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="message"></h1>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script src="https://google.github.io/traceur-compiler/bin/traceur.js"></script>
+    <script src="https://google.github.io/traceur-compiler/src/bootstrap.js"></script>
+    <script>
+    console.log(traceur.options)
+      traceur.options.experimental = true;
+      traceur.options.blockBinding = true;
+    </script>
+    <script type="module">
+
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+
+      class Ball {
+        constructor() {
+          this.radius = 50;
+          this.gravity = 0.6;
+          this.bounce = -0.8;
+          this.y = canvas.height - (this.radius);
+          this.x = canvas.width / 2;
+          this.vx = 0;
+          this.vy = -10;
+        }
+
+        draw(context) {
+          context.fillStyle = 'blue';
+          context.beginPath();
+          context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
+          context.closePath();
+          context.fill();
+        }
+
+        tick() {
+          this.vy += this.gravity
+          this.y += this.vy;
+
+          if(this.y > canvas.height - this.radius) {
+            this.vy = (this.vy * this.bounce);
+            this.y = canvas.height - this.radius
+          }
+
+
+        }
+      }
+
+
+
+      (function() {
+        let ball = new Ball();
+        (function render() {
+          console.log(ball.y, ball.vy)
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          ball.tick();
+          ball.draw(context);
+          window.requestAnimationFrame(render);
+        })();
+      })();
+    </script>
+  </body>
+</html>
