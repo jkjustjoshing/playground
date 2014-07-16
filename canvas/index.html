@@ -14,14 +14,19 @@
     <script src="../bower_components/traceur/traceur.js"></script>
     <script src="../bower_components/es6-module-loader/dist/es6-module-loader.js"></script>
     <script>
-    console.log(traceur.options)
       traceur.options.experimental = true;
       traceur.options.blockBinding = true;
     </script>
     <script type="module">
 
-      System.import('Ball').then(function(module) {
-        let Ball = module.Ball
+      Promise.all([
+        System.import('Ball'),
+        System.import('Mouse')
+      ]).then(function(modules) {
+        let Ball = modules[0].Ball;
+        let Mouse = modules[1].Mouse;
+
+        var mouse = new Mouse(document.getElementsByTagName('canvas')[0]);
 
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
@@ -33,13 +38,15 @@
             bounce: (Math.random() * 0.7) + 0.2,
             weight: (Math.random() * 0.4) + 0.6,
             x: 50 + (i * 100),
-            radius: (Math.random() * 40) + 10
+            radius: (Math.random() * 40) + 10,
+            color: 'rgb('+Math.round(Math.random() * 255)+','+Math.round(Math.random() * 255)+','+Math.round(Math.random() * 255)+')'
           });
           balls.push(ball);
         }
 
         (function render() {
           context.clearRect(0, 0, canvas.width, canvas.height);
+          balls.forEach(ball => ball.setGravityPoint(mouse.position));
           balls.forEach(ball => ball.tick());
           balls.forEach(ball => ball.draw());
           window.requestAnimationFrame(render);
