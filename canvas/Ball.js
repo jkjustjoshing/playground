@@ -1,4 +1,6 @@
-export const GRAVITY = 0.6;
+export const GRAVITY = 1.5;
+export const FRICTION = 0.1;
+
 export class Ball{
   constructor(contextOrObject) {
     this.color = 'blue';
@@ -29,10 +31,6 @@ export class Ball{
 
   setGravityPoint(pos) {
     this.gravity = pos;
-    this.context.beginPath()
-    this.context.arc(pos.x,pos.y,5,0,Math.PI*2, false)
-    this.context.closePath()
-    this.context.fill()
   }
 
   draw() {
@@ -60,6 +58,18 @@ export class Ball{
     };
     this.vy += forceComponents.y;
     this.vx += forceComponents.x;
+
+    if(this.vy > 3) {
+      this.vy -= FRICTION;
+    } else if(this.vy < -3) {
+      this.vy += FRICTION;
+    }
+    if(this.vx > 3) {
+      this.vx -= FRICTION;
+    } else if(this.vx < -3) {
+      this.vx += FRICTION;
+    }
+
     this.y += this.vy;
     this.x += this.vx;
 
@@ -67,7 +77,19 @@ export class Ball{
       this.vy = (this.vy * -1 * this.bounce);
       this.y = canvas.height - this.radius
     }
+    if(this.y < this.radius) {
+      this.vy = (this.vy * -1 * this.bounce);
+      this.y = this.radius
+    }
 
+    if(this.x > canvas.width - this.radius) {
+      this.vx = (this.vx * -1 * this.bounce);
+      this.x = canvas.width - this.radius
+    }
+  if(this.x < this.radius) {
+      this.vx = (this.vx * -1 * this.bounce);
+      this.x = this.radius
+    }
 
   }
 }
