@@ -11,8 +11,8 @@
   <body>
     <h1 id="message"></h1>
     <canvas id="canvas" width="500" height="500"></canvas>
-    <script src="https://google.github.io/traceur-compiler/bin/traceur.js"></script>
-    <script src="https://google.github.io/traceur-compiler/src/bootstrap.js"></script>
+    <script src="../bower_components/traceur/traceur.js"></script>
+    <script src="../bower_components/es6-module-loader/dist/es6-module-loader.js"></script>
     <script>
     console.log(traceur.options)
       traceur.options.experimental = true;
@@ -20,53 +20,24 @@
     </script>
     <script type="module">
 
-      var canvas = document.getElementById('canvas');
-      var context = canvas.getContext('2d');
+      System.import('Ball').then(function(module) {
+        let Ball = module.Ball
 
-      class Ball {
-        constructor() {
-          this.radius = 50;
-          this.gravity = 0.6;
-          this.bounce = -0.8;
-          this.y = canvas.height - (this.radius);
-          this.x = canvas.width / 2;
-          this.vx = 0;
-          this.vy = -10;
-        }
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
 
-        draw(context) {
-          context.fillStyle = 'blue';
-          context.beginPath();
-          context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
-          context.closePath();
-          context.fill();
-        }
-
-        tick() {
-          this.vy += this.gravity
-          this.y += this.vy;
-
-          if(this.y > canvas.height - this.radius) {
-            this.vy = (this.vy * this.bounce);
-            this.y = canvas.height - this.radius
-          }
-
-
-        }
-      }
-
-
-
-      (function() {
-        let ball = new Ball();
+        let ball = new Ball(context);
         (function render() {
-          console.log(ball.y, ball.vy)
           context.clearRect(0, 0, canvas.width, canvas.height);
           ball.tick();
-          ball.draw(context);
+          ball.draw();
           window.requestAnimationFrame(render);
         })();
-      })();
+
+      }, function(err) {
+        alert('Error loading module', err)
+      });
+
     </script>
   </body>
 </html>
