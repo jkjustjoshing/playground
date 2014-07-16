@@ -1,13 +1,24 @@
+export const GRAVITY = 0.6;
 export class Ball{
-  constructor(context) {
-    this.context = context;
+  constructor(contextOrObject) {
     this.radius = 50;
-    this.gravity = 0.6;
-    this.bounce = -0.8;
+    this.weight = 0.6;
+    this.bounce = 0.8;
     this.y = canvas.height - (this.radius);
     this.x = canvas.width / 2;
     this.vx = 0;
     this.vy = -20;
+
+    if(contextOrObject instanceof CanvasRenderingContext2D) {
+      this.context = contextOrObject;
+    } else {
+      for(let key in contextOrObject) {
+        if(contextOrObject.hasOwnProperty(key)) {
+          this[key] = contextOrObject[key];
+        }
+      }
+    }
+
   }
 
   draw() {
@@ -21,11 +32,11 @@ export class Ball{
   }
 
   tick() {
-    this.vy += this.gravity
+    this.vy += (this.weight * GRAVITY)
     this.y += this.vy;
 
     if(this.y > canvas.height - this.radius) {
-      this.vy = (this.vy * this.bounce);
+      this.vy = (this.vy * -1 * this.bounce);
       this.y = canvas.height - this.radius
     }
 

@@ -26,11 +26,22 @@
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
 
-        let ball = new Ball(context);
+        let balls = [];
+        for(let i = 0; i < 5; ++i) {
+          var ball = new Ball({
+            context,
+            bounce: (Math.random() * 0.7) + 0.2,
+            weight: (Math.random() * 0.4) + 0.6,
+            x: 50 + (i * 100),
+            radius: (Math.random() * 40) + 10
+          });
+          balls.push(ball);
+        }
+
         (function render() {
           context.clearRect(0, 0, canvas.width, canvas.height);
-          ball.tick();
-          ball.draw();
+          balls.forEach(ball => ball.tick());
+          balls.forEach(ball => ball.draw());
           window.requestAnimationFrame(render);
         })();
 
