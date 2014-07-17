@@ -10,8 +10,8 @@ export class Mouse {
     };
 
     element.addEventListener('mousemove', event => {
-      this.position.x = event.x - offset.x;
-      this.position.y = event.y - offset.y;
+      this.position.x = event.x - offset.x + window.scrollX;
+      this.position.y = event.y - offset.y + window.scrollY;
     });
   }
 

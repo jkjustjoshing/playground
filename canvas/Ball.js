@@ -7,10 +7,10 @@ export class Ball{
     this.radius = 50;
     this.weight = 0.6;
     this.bounce = 0.8;
-    this.y = canvas.height - (this.radius);
-    this.x = canvas.width / 2;
+    this.y = 0;
+    this.x = 0;
     this.vx = 0;
-    this.vy = -20;
+    this.vy = 0;
 
     if(contextOrObject instanceof CanvasRenderingContext2D) {
       this.context = contextOrObject;
@@ -59,14 +59,16 @@ export class Ball{
     this.vy += forceComponents.y;
     this.vx += forceComponents.x;
 
-    if(this.vy > 3) {
+    var minimumJostle = 3;
+
+    if(this.vy > minimumJostle) {
       this.vy -= FRICTION;
-    } else if(this.vy < -3) {
+    } else if(this.vy < -1 * minimumJostle) {
       this.vy += FRICTION;
     }
-    if(this.vx > 3) {
+    if(this.vx > minimumJostle) {
       this.vx -= FRICTION;
-    } else if(this.vx < -3) {
+    } else if(this.vx < -1 * minimumJostle) {
       this.vx += FRICTION;
     }
 
